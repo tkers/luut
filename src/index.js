@@ -10,7 +10,7 @@ import {
   spr_slime,
   spr_coin,
 } from "./sprites";
-import { randomPositions } from "./rnd";
+import { randomPositions, randomElem } from "./rnd";
 let ctx, drawTile, drawBat, drawSkeleton, drawKnight, drawSlime, drawCoin;
 let keys = {};
 let knightX, knightY, knightDir;
@@ -84,11 +84,25 @@ const keyMap = {
   },
 };
 
+const nextPosition = (x, y) => {
+  const opts = [];
+  if (x > 1) opts.push([x - 1, y]);
+  if (y > 1) opts.push([x, y - 1]);
+  if (x < WIDTH - 2) opts.push([x + 1, y]);
+  if (y < HEIGHT - 2) opts.push([x, y + 1]);
+  return randomElem(opts);
+};
+
 function update() {
   Object.entries(keyMap).forEach(([n, fn]) => {
     if (keys[n]) {
       keys[n] = false;
       fn();
+      entities.slice(3).forEach((ent) => {
+        const [x, y] = nextPosition(ent.x, ent.y);
+        ent.x = x;
+        ent.y = y;
+      });
     }
   });
 
