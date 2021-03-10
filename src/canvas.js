@@ -21,3 +21,11 @@ export const resizeCanvas = function (canvas, width, height, scale = 1) {
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   return canvas;
 };
+
+export const setupCanvas = (id, width, height, scale) => {
+  const elem = document.getElementById(id);
+  resizeCanvas(elem, width, height, scale);
+  const ctx = elem.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  return ctx;
+};
