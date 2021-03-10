@@ -8,9 +8,13 @@ body {
 body {
   /* background-color: #343133; */
   background-color: #271d2a;
-
   text-align: center;
-  margin-top: 60px;
+
+  -webkit-overflow-scrolling: auto;
+  position: fixed;
+  overflow: hidden;
+  top: 60px;
+  width: 100%;
 }
 /* .preload {
   font-family: "Nanum Pen Script";
