@@ -126,12 +126,9 @@ function update() {
 
   for (let y = 1; y < HEIGHT - 1; y++) {
     for (let x = 1; x < WIDTH - 1; x++) {
-      // ctx.drawImage(spr_tiles, 1 * 16, 1 * 16, 16, 16, x * 16, y * 16, 16, 16);
       drawTile(1, 1, x, y);
     }
   }
-
-  // ctx.drawImage(spr_tiles, 10, 10);
 
   // top wall
   drawTile(0, 0, 0, 0);
@@ -178,24 +175,6 @@ function update() {
   if (knightDrawY > knightY)
     knightDrawY -= Math.min(knightDrawY - knightY, 1 / 5);
   drawKnight[knightDir](knightDrawX, knightDrawY);
-
-  // ctx.restore();
-  // // Draw background
-  // for (let i = 0; i < worldWidth; i += bg_grid.width) {
-  //   view.drawImage(ctx, bg_grid, i, 0);
-  // }
-  //
-  // // Draw timer
-  // ctx.fillStyle = "rgb(90,130,64)";
-  // ctx.fillRect(0, 0, Math.max(0, view.width * (waveProgress / waveMax)), 5);
-  //
-  // // Draw tiles
-  // tiles.forEach(({ img, x, y, ox, oy }) =>
-  //   view.drawImage(ctx, img, ox * 20, oy * 20, 20, 20, x * 20, y * 20, 20, 20)
-  // );
-  //
-  // // Draw sprites
-  // spriteSystem(view, ctx, spriteFamily.getEntities());
 
   requestAnimationFrame(update);
 }
