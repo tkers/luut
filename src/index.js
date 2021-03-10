@@ -22,6 +22,7 @@ let entities;
 let stairsX, stairsY;
 let isDescending, fade;
 let knight;
+let floor = 0;
 
 window.addEventListener("keydown", function (e) {
   keys[e.keyCode] = true;
@@ -54,6 +55,9 @@ function init() {
 function start() {
   isDescending = false;
   fade = 1.5;
+
+  floor++;
+  document.getElementById("floor-hud").textContent = `${floor}`;
 
   const rndPos = randomPositions(1, 1, WIDTH - 1, HEIGHT - 1).filter(
     ([x, y]) => Math.abs(x - knight.x) > 1 || Math.abs(y - knight.y) > 1

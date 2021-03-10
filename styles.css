@@ -1,4 +1,4 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Fondamento&display=swap");
 
 html,
 body {
@@ -8,9 +8,11 @@ body {
 body {
   /* background-color: #343133; */
   background-color: #271d2a;
+  color: #f3b17a;
+  font-family: "Fondamento", cursive;
   text-align: center;
-  padding-top: env(safe-area-inset-top);
 
+  padding-top: env(safe-area-inset-top);
   -webkit-overflow-scrolling: auto;
   position: fixed;
   overflow: hidden;
@@ -18,15 +20,18 @@ body {
   width: 100%;
   user-select: none;
 }
-main {
-  padding-top: 60px;
+strong {
+  color: #f1d3bb;
 }
-/* .preload {
-  font-family: "Nanum Pen Script";
-  position: absolute;
-  opacity: 0;
-  user-select: none;
-} */
+header {
+  /* display: inline-block;
+  background-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 10%), 0 1px 0 #000 inset;
+  border-radius: 32px;
+  padding: 6px 18px; */
+  margin: 32px 0 32px;
+  font-size: 20px;
+}
 canvas {
   /* background-color: #271d2a; */
   /* box-shadow: 0 2px 8px #000; */
@@ -43,7 +48,6 @@ footer {
   border-radius: 500px;
   background-color: rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 #000 inset;
-  font-family: sans-serif;
   color: #888;
   font-size: 12px;
   cursor: default;
@@ -59,5 +63,5 @@ a {
   text-decoration: none;
 }
 footer a:hover {
-  color: #f3b17a;
+  color: #d37e5c;
 }
