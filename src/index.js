@@ -11,10 +11,18 @@ import {
   spr_coin,
 } from "./sprites";
 import { randomPositions, randomElem } from "./rnd";
-let ctx, drawTile, drawBat, drawSkeleton, drawKnight, drawSlime, drawCoin;
+let ctx,
+  drawStairs,
+  drawTile,
+  drawBat,
+  drawSkeleton,
+  drawKnight,
+  drawSlime,
+  drawCoin;
 let keys = {};
 let knightX, knightY, knightDir, knightDrawX, knightDrawY;
-let entities = [];
+let entities;
+let stairsX, stairsY;
 
 const CELL_SIZE = 16;
 const WIDTH = 16;
@@ -30,11 +38,12 @@ window.addEventListener("keyup", function (e) {
 });
 
 window.addEventListener("load", function () {
+  init();
   start();
   update();
 });
 
-function start() {
+function init() {
   const canvas = document.getElementById("root");
   resizeCanvas(canvas, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE, SCALE);
   ctx = canvas.getContext("2d");
@@ -49,22 +58,25 @@ function start() {
   drawSlime = createAnimation(ctx, spr_slime, CELL_SIZE);
   drawCoin = createAnimation(ctx, spr_coin, CELL_SIZE);
 
-  const drawStairs = (x, y) => drawTile(8, 1, x, y);
+  drawStairs = (x, y) => drawTile(8, 1, x, y);
 
   knightX = 2;
   knightY = 2;
   knightDir = 0;
+}
 
+function start() {
   const rndPos = randomPositions(1, 1, WIDTH - 1, HEIGHT - 1).filter(
-    ([x, y]) => x > 3 || y > 3
+    ([x, y]) => Math.abs(x - knightX) > 1 || Math.abs(y - knightY) > 1
   );
 
-  [drawStairs, drawCoin, drawCoin, drawBat, drawSkeleton, drawSlime].forEach(
-    (spr) => {
-      const [x, y] = rndPos.pop();
-      entities.push({ spr, x, y });
-    }
-  );
+  [stairsX, stairsY] = rndPos.pop();
+  entities = [{ spr: drawStairs, x: stairsX, y: stairsY }];
+
+  [drawCoin, drawCoin, drawBat, drawSkeleton, drawSlime].forEach((spr) => {
+    const [x, y] = rndPos.pop();
+    entities.push({ spr, x, y });
+  });
 }
 
 const keyMap = {
@@ -94,6 +106,10 @@ const nextPosition = (x, y) => {
 };
 
 function update() {
+  if (knightX === stairsX && knightY === stairsY) {
+    start();
+  }
+
   Object.entries(keyMap).forEach(([n, fn]) => {
     if (keys[n]) {
       keys[n] = false;
