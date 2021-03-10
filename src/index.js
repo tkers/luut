@@ -27,8 +27,8 @@ let stairsX, stairsY;
 let isDescending, fade;
 
 const CELL_SIZE = 16;
-const WIDTH = 12;
-const HEIGHT = 8;
+const WIDTH = 8;
+const HEIGHT = 10;
 const SCALE = 3;
 
 window.addEventListener("keydown", function (e) {
