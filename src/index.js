@@ -11,6 +11,7 @@ import {
   spr_coin,
 } from "./sprites";
 import { randomPositions, randomElem } from "./rnd";
+import { handleSwipe } from "./touch";
 let ctx,
   drawStairs,
   drawTile,
@@ -36,6 +37,10 @@ window.addEventListener("keydown", function (e) {
 
 window.addEventListener("keyup", function (e) {
   keys[e.keyCode] = false;
+});
+
+handleSwipe((keyCode) => {
+  keys[keyCode] = true;
 });
 
 window.addEventListener("load", function () {
