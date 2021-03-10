@@ -23,9 +23,10 @@ let keys = {};
 let knightX, knightY, knightDir, knightDrawX, knightDrawY;
 let entities;
 let stairsX, stairsY;
+let isDescending, fade;
 
 const CELL_SIZE = 16;
-const WIDTH = 16;
+const WIDTH = 12;
 const HEIGHT = 8;
 const SCALE = 3;
 
@@ -66,6 +67,9 @@ function init() {
 }
 
 function start() {
+  isDescending = false;
+  fade = 2;
+
   const rndPos = randomPositions(1, 1, WIDTH - 1, HEIGHT - 1).filter(
     ([x, y]) => Math.abs(x - knightX) > 1 || Math.abs(y - knightY) > 1
   );
@@ -106,21 +110,33 @@ const nextPosition = (x, y) => {
 };
 
 function update() {
-  if (knightX === stairsX && knightY === stairsY) {
-    start();
+  // descend
+
+  if (isDescending) {
+    if (fade < 1) fade += Math.min(1 - fade, 1 / 15);
+    else start();
+  } else {
+    if (fade > 0) fade -= Math.min(fade, 1 / 15);
+    if (knightX === stairsX && knightY === stairsY) isDescending = true;
   }
 
-  Object.entries(keyMap).forEach(([n, fn]) => {
-    if (keys[n]) {
-      keys[n] = false;
-      fn();
-      entities.slice(3).forEach((ent) => {
-        const [x, y] = nextPosition(ent.x, ent.y);
-        ent.x = x;
-        ent.y = y;
-      });
-    }
-  });
+  // input
+
+  if (!isDescending) {
+    Object.entries(keyMap).forEach(([n, fn]) => {
+      if (keys[n]) {
+        keys[n] = false;
+        fn();
+        entities.slice(3).forEach((ent) => {
+          const [x, y] = nextPosition(ent.x, ent.y);
+          ent.x = x;
+          ent.y = y;
+        });
+      }
+    });
+  }
+
+  // draw
 
   ctx.clearRect(0, 0, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
 
@@ -175,6 +191,11 @@ function update() {
   if (knightDrawY > knightY)
     knightDrawY -= Math.min(knightDrawY - knightY, 1 / 5);
   drawKnight[knightDir](knightDrawX, knightDrawY);
+
+  if (fade > 0) {
+    ctx.fillStyle = `rgba(39, 29, 42, ${fade})`;
+    ctx.fillRect(0, 0, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
+  }
 
   requestAnimationFrame(update);
 }
