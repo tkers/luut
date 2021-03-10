@@ -13,7 +13,7 @@ import {
 import { randomPositions, randomElem } from "./rnd";
 let ctx, drawTile, drawBat, drawSkeleton, drawKnight, drawSlime, drawCoin;
 let keys = {};
-let knightX, knightY, knightDir;
+let knightX, knightY, knightDir, knightDrawX, knightDrawY;
 let entities = [];
 
 const CELL_SIZE = 16;
@@ -141,9 +141,27 @@ function update() {
     drawTile(2, 1, WIDTH - 1, y);
   }
 
-  entities.forEach(({ spr, x, y }) => spr(x, y));
+  entities.forEach((ent) => {
+    if (typeof ent.drawX === "undefined") ent.drawX = ent.x;
+    if (typeof ent.drawY === "undefined") ent.drawY = ent.y;
+    if (ent.drawX < ent.x) ent.drawX += Math.min(ent.x - ent.drawX, 1 / 5);
+    if (ent.drawY < ent.y) ent.drawY += Math.min(ent.y - ent.drawY, 1 / 5);
+    if (ent.drawX > ent.x) ent.drawX -= Math.min(ent.drawX - ent.x, 1 / 5);
+    if (ent.drawY > ent.y) ent.drawY -= Math.min(ent.drawY - ent.y, 1 / 5);
+    ent.spr(ent.drawX, ent.drawY);
+  });
 
-  drawKnight[knightDir](knightX, knightY);
+  if (typeof knightDrawX === "undefined") knightDrawX = knightX;
+  if (typeof knightDrawY === "undefined") knightDrawY = knightY;
+  if (knightDrawX < knightX)
+    knightDrawX += Math.min(knightX - knightDrawX, 1 / 5);
+  if (knightDrawY < knightY)
+    knightDrawY += Math.min(knightY - knightDrawY, 1 / 5);
+  if (knightDrawX > knightX)
+    knightDrawX -= Math.min(knightDrawX - knightX, 1 / 5);
+  if (knightDrawY > knightY)
+    knightDrawY -= Math.min(knightDrawY - knightY, 1 / 5);
+  drawKnight[knightDir](knightDrawX, knightDrawY);
 
   // ctx.restore();
   // // Draw background
