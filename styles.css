@@ -14,8 +14,12 @@ body {
   -webkit-overflow-scrolling: auto;
   position: fixed;
   overflow: hidden;
-  top: 60px;
+  top: 0;
   width: 100%;
+  user-select: none;
+}
+main {
+  padding-top: 60px;
 }
 /* .preload {
   font-family: "Nanum Pen Script";
@@ -24,7 +28,7 @@ body {
   user-select: none;
 } */
 canvas {
-  background-color: #271d2a;
+  /* background-color: #271d2a; */
   /* box-shadow: 0 2px 8px #000; */
   /* border-radius: 4px; */
   transition-property: opacity;
