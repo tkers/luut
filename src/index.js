@@ -10,9 +10,11 @@ import {
   spr_slime,
   spr_coin,
 } from "./sprites";
+import { randomPositions } from "./rnd";
 let ctx, drawTile, drawBat, drawSkeleton, drawKnight, drawSlime, drawCoin;
 let keys = {};
 let knightX, knightY, knightDir;
+let entities = [];
 
 const CELL_SIZE = 16;
 const WIDTH = 20;
@@ -47,9 +49,22 @@ function start() {
   drawSlime = createAnimation(ctx, spr_slime, CELL_SIZE);
   drawCoin = createAnimation(ctx, spr_coin, CELL_SIZE);
 
+  const drawStairs = (x, y) => drawTile(8, 1, x, y);
+
   knightX = 2;
   knightY = 2;
   knightDir = 0;
+
+  const rndPos = randomPositions(1, 1, WIDTH - 1, HEIGHT - 1).filter(
+    ([x, y]) => x > 3 || y > 3
+  );
+
+  [drawStairs, drawCoin, drawCoin, drawBat, drawSkeleton, drawSlime].forEach(
+    (spr) => {
+      const [x, y] = rndPos.pop();
+      entities.push({ spr, x, y });
+    }
+  );
 }
 
 const keyMap = {
@@ -58,14 +73,14 @@ const keyMap = {
     knightDir = 1;
   },
   38: () => {
-    if (knightY > 2) knightY--;
+    if (knightY > 1) knightY--;
   },
   39: () => {
-    if (knightX < WIDTH - 1) knightX++;
+    if (knightX < WIDTH - 2) knightX++;
     knightDir = 0;
   },
   40: () => {
-    if (knightY < HEIGHT - 1) knightY++;
+    if (knightY < HEIGHT - 2) knightY++;
   },
 };
 
@@ -112,14 +127,7 @@ function update() {
     drawTile(2, 1, WIDTH - 1, y);
   }
 
-  // stairs
-  drawTile(8, 1, 17, 16);
-
-  drawBat(5, 5);
-  drawSkeleton(9, 13);
-  drawSlime(15, 4);
-  drawCoin(12, 6);
-  drawCoin(4, 15);
+  entities.forEach(({ spr, x, y }) => spr(x, y));
 
   drawKnight[knightDir](knightX, knightY);
 
