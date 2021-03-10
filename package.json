@@ -1,0 +1,19 @@
+{
+  "name": "7drl",
+  "version": "0.0.1",
+  "description": "roguelike game",
+  "main": "index.js",
+  "repository": "git@github.com:tkers/7drl.git",
+  "author": "Tijn Kersjes <tijn@divbyzero.nl>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "dev": "rollup -c rollup.config.js -w src",
+    "start": "yarn build && open index.html"
+  },
+  "devDependencies": {
+    "rollup": "^2.40.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "private": true
+}
