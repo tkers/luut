@@ -17,9 +17,9 @@ let knightX, knightY, knightDir;
 let entities = [];
 
 const CELL_SIZE = 16;
-const WIDTH = 20;
-const HEIGHT = 20;
-const SCALE = 2;
+const WIDTH = 16;
+const HEIGHT = 8;
+const SCALE = 3;
 
 window.addEventListener("keydown", function (e) {
   keys[e.keyCode] = true;
