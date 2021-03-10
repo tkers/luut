@@ -19,14 +19,10 @@ export const createAnimation = (ctx, spr, w, h = w) => {
     ctx.drawImage(spr, frame * w, 0, w, h, dx * w, dy * h, w, h);
 };
 
-export const spr_tiles = loadSprite("img/tileset.png");
-export const spr_bat = loadSprite("img/Characters/Bat.png");
-export const spr_skeleton = loadSprite("img/Characters/Skeleton_idle.png");
-export const spr_knight = loadSprite("img/Characters/Knight_idle.png");
-export const spr_knight_flip = loadSprite(
-  "img/Characters/Knight_idle_flip.png"
-);
-export const spr_slime = loadSprite("img/Characters/Slime (green).png");
-export const spr_coin = loadSprite("img/Objects and traps/Gold coin.png");
-// export const spr_player = loadSprite("img/player.png");
-// export const spr_friend = loadSprite("img/friend.png");
+export const spr_tiles = loadSprite("img/tiles.png");
+export const spr_bat = loadSprite("img/bat.png");
+export const spr_skeleton = loadSprite("img/skeleton.png");
+export const spr_knight = loadSprite("img/knight.png");
+export const spr_knight_flip = loadSprite("img/knight_flip.png");
+export const spr_slime = loadSprite("img/slime.png");
+export const spr_coin = loadSprite("img/coin.png");
