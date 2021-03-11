@@ -47,6 +47,10 @@ const decrementLives = () => {
   }
 };
 
+const addEntity = (ent) => {
+  entities.push(ent);
+  entities.sort((a, b) => (b.sort || 0) - (a.sort || 0));
+};
 const getEntityAt = (x, y) => entities.find((e) => e.x === x && e.y === y);
 const removeEntity = (ent) => {
   entities = entities.filter((e) => e !== ent);
@@ -98,12 +102,12 @@ function startNextFloor() {
   );
 
   const [stairsX, stairsY] = rndPos.pop();
-  entities.push(makeStairs(stairsX, stairsY));
+  addEntity(makeStairs(stairsX, stairsY));
 
   const toSpawn = decideSpawns(floor, rndPos.length);
   toSpawn.forEach((make) => {
     const [x, y] = rndPos.pop();
-    entities.push(make(x, y));
+    addEntity(make(x, y));
   });
 }
 
@@ -166,7 +170,7 @@ function update() {
                 ent.y = action.y;
               }
               if (action.type === "Spawn") {
-                entities.push(action.make(ent.x, ent.y));
+                addEntity(action.make(ent.x, ent.y));
               }
             });
           });

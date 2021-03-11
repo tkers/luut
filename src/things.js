@@ -77,6 +77,7 @@ export const makeKnight = (x, y) => {
 export const makeStairs = (x, y) => ({
   name: "Stairs",
   draw: (ctx, x, y) => drawTile(ctx, 8, 1, x, y),
+  sort: 10,
   x,
   y,
 });
@@ -84,6 +85,7 @@ export const makeStairs = (x, y) => ({
 export const makeCoin = (x, y) => ({
   name: "Coin",
   draw: createAnimation(spr_coin, CELL_SIZE),
+  sort: 5,
   x,
   y,
 });
@@ -91,6 +93,7 @@ export const makeCoin = (x, y) => ({
 export const makePotion = (x, y) => ({
   name: "Potion",
   draw: createAnimation(spr_potion, CELL_SIZE),
+  sort: 5,
   x,
   y,
 });
