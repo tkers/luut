@@ -40,7 +40,6 @@ canvas {
   transition-property: opacity;
   transition-duration: 0.1s;
   user-select: none;
-  image-rendering: pixelated;
 }
 footer {
   margin: 20px;
