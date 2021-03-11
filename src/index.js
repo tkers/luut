@@ -59,6 +59,12 @@ const removeEntity = (ent) => {
 const isWallAt = (x, y) =>
   x === 0 || y === 0 || x === WIDTH - 1 || y === HEIGHT - 1;
 
+const isFreeAt = (x, y) => {
+  if (isWallAt(x, y)) return false;
+  const ent = getEntityAt(x, y);
+  return !ent || ent.name !== "Stairs";
+};
+
 window.addEventListener("keydown", function (e) {
   keys[e.keyCode] = true;
 });
@@ -174,7 +180,12 @@ function update() {
         entities
           .filter((e) => !!e.turn)
           .forEach((ent) => {
-            const actions = ent.turn({ me: ent, player: knight, floor });
+            const actions = ent.turn({
+              me: ent,
+              player: knight,
+              floor,
+              isFreeAt,
+            });
             actions.forEach((action) => {
               if (action.type === "Move") {
                 ent.x = action.x;

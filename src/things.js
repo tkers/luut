@@ -15,47 +15,46 @@ import {
 
 const drawTile = createTileSet(spr_tiles, CELL_SIZE);
 
-const getRandomMove = (me) => {
-  const opts = [];
-  if (me.x > 1) opts.push([me.x - 1, me.y]);
-  if (me.y > 1) opts.push([me.x, me.y - 1]);
-  if (me.x < WIDTH - 2) opts.push([me.x + 1, me.y]);
-  if (me.y < HEIGHT - 2) opts.push([me.x, me.y + 1]);
+const getRandomMove = (me, isFreeAt) => {
+  const opts = [
+    [me.x - 1, me.y],
+    [me.x, me.y - 1],
+    [me.x + 1, me.y],
+    [me.x, me.y + 1],
+  ].filter(([x, y]) => isFreeAt(x, y));
   const nextPos = randomElem(opts);
   return nextPos && { type: "Move", x: nextPos[0], y: nextPos[1] };
 };
 
-const getTargetMove = (me, tgt) => {
-  const opts = [];
-  if (me.x > 1 && me.x > tgt.x) opts.push([me.x - 1, me.y]);
-  if (me.y > 1 && me.y > tgt.y) opts.push([me.x, me.y - 1]);
-  if (me.x < WIDTH - 2 && me.x < tgt.x) opts.push([me.x + 1, me.y]);
-  if (me.y < HEIGHT - 2 && me.y < tgt.y) opts.push([me.x, me.y + 1]);
+const getTargetMove = (me, tgt, isFreeAt) => {
+  const opts = [
+    [me.x - 1, me.y],
+    [me.x, me.y - 1],
+    [me.x + 1, me.y],
+    [me.x, me.y + 1],
+    [me.x + (me.x > tgt.x ? -1 : 1), me.y],
+    [me.x, me.y + (me.y > tgt.y ? -1 : 1)],
+  ].filter(([x, y]) => isFreeAt(x, y));
   const nextPos = randomElem(opts);
   return nextPos && { type: "Move", x: nextPos[0], y: nextPos[1] };
 };
 
-const randomWalk = ({ me }) => {
-  return [getRandomMove(me)];
-};
+const randomWalk = ({ me }) => [getRandomMove(me)];
 
-const randomLazyWalk = ({ me }) => {
-  return Math.random() > 0.5 ? [getRandomMove(me)] : [];
-};
+const randomLazyWalk = ({ me, isFreeAt }) =>
+  Math.random() > 0.5 ? [getRandomMove(me, isFreeAt)] : [];
 
-const aggressiveWalk = ({ me, player }) => {
-  return Math.random() > 0.8
-    ? [getTargetMove(me, player)]
-    : [getRandomMove(me)];
-};
+const aggressiveWalk = ({ me, player, isFreeAt }) => [
+  getTargetMove(me, player, isFreeAt),
+];
 
-const randomWalkAndSplice = ({ me, floor }) => {
+const randomWalkAndSplice = ({ me, isFreeAt }) => {
   const actions = [];
   me.grow++;
   if (me.grow === 5) {
     actions.push({ type: "Spawn", make: makeSlime });
   }
-  actions.push(getRandomMove(me));
+  actions.push(getRandomMove(me, isFreeAt));
   return actions;
 };
 
