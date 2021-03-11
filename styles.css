@@ -20,6 +20,15 @@ body {
 strong {
   color: #f1d3bb;
 }
+main,
+header,
+canvas,
+footer {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
 header {
   background-color: #1e1721;
   padding: 16px 32px 32px;
@@ -34,12 +43,10 @@ main {
 
   padding: 32px 0;
   border-radius: 8px;
-  user-select: none;
 }
 canvas {
   transition-property: opacity;
   transition-duration: 0.1s;
-  user-select: none;
 }
 footer {
   margin: 20px;
@@ -51,7 +58,6 @@ footer {
   color: #888;
   font-size: 12px;
   cursor: default;
-  user-select: none;
 }
 footer b {
   color: #000;
