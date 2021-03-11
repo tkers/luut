@@ -44,7 +44,7 @@ const randomLazyWalk = ({ me }) => {
 };
 
 const aggressiveWalk = ({ me, player }) => {
-  return Math.random() > 0.7
+  return Math.random() > 0.8
     ? [getTargetMove(me, player)]
     : [getRandomMove(me)];
 };

@@ -4,17 +4,10 @@ import { handleSwipe } from "./touch";
 
 import { createTileSet, createAnimation } from "./gfx";
 import { tweenPos } from "./tween";
-import { shuffleArray, randomPositions, randomElem } from "./rnd";
+import { randomPositions, randomElem } from "./rnd";
 
-import {
-  makeKnight,
-  makeStairs,
-  makeCoin,
-  makePotion,
-  makeBat,
-  makeSkeleton,
-  makeSlime,
-} from "./things";
+import { makeKnight, makeStairs } from "./things";
+import { decideSpawns } from "./floors";
 
 import { spr_tiles } from "./sprites";
 
@@ -107,28 +100,8 @@ function startNextFloor() {
   const [stairsX, stairsY] = rndPos.pop();
   entities.push(makeStairs(stairsX, stairsY));
 
-  if (floor % 5 === 0) {
-    const [potionX, potionY] = rndPos.pop();
-    entities.push(makePotion(potionX, potionY));
-  }
-
-  const toSpawn = [];
-  for (let i = 0; i < floor; i++) {
-    toSpawn.push(makeCoin);
-  }
-  for (let i = 0; i < floor - 1; i++) {
-    toSpawn.push(makeBat);
-  }
-  for (let i = 0; i < floor - 2; i++) {
-    toSpawn.push(makeSkeleton);
-  }
-  for (let i = 0; i < floor - 3; i++) {
-    toSpawn.push(makeSlime);
-  }
-
-  shuffleArray(toSpawn);
-
-  toSpawn.slice(0, rndPos.length / 3).forEach((make) => {
+  const toSpawn = decideSpawns(floor, rndPos.length);
+  toSpawn.forEach((make) => {
     const [x, y] = rndPos.pop();
     entities.push(make(x, y));
   });
