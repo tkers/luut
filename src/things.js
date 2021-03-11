@@ -7,6 +7,7 @@ import {
   spr_knight,
   spr_knight_flip,
   spr_coin,
+  spr_potion,
   spr_bat,
   spr_skeleton,
   spr_slime,
@@ -84,6 +85,13 @@ export const makeStairs = (x, y) => ({
 export const makeCoin = (x, y) => ({
   name: "Coin",
   draw: createAnimation(spr_coin, CELL_SIZE),
+  x,
+  y,
+});
+
+export const makePotion = (x, y) => ({
+  name: "Potion",
+  draw: createAnimation(spr_potion, CELL_SIZE),
   x,
   y,
 });

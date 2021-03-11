@@ -10,6 +10,7 @@ import {
   makeKnight,
   makeStairs,
   makeCoin,
+  makePotion,
   makeBat,
   makeSkeleton,
   makeSlime,
@@ -37,6 +38,11 @@ const incrementFloor = () => {
 
 const incrementCoins = () => {
   coins++;
+  redrawStats();
+};
+
+const incrementLives = () => {
+  lives++;
   redrawStats();
 };
 
@@ -101,6 +107,11 @@ function startNextFloor() {
   const [stairsX, stairsY] = rndPos.pop();
   entities.push(makeStairs(stairsX, stairsY));
 
+  if (floor % 5 === 0) {
+    const [potionX, potionY] = rndPos.pop();
+    entities.push(makePotion(potionX, potionY));
+  }
+
   const toSpawn = [];
   for (let i = 0; i < floor; i++) {
     toSpawn.push(makeCoin);
@@ -144,6 +155,10 @@ function handleCollision(ent) {
   if (ent.name === "Stairs") isDescending = true;
   if (ent.name === "Coin") {
     incrementCoins();
+    removeEntity(ent);
+  }
+  if (ent.name === "Potion") {
+    incrementLives();
     removeEntity(ent);
   }
   if (ent.name === "Slime" || ent.name === "Bat" || ent.name === "Skeleton") {
