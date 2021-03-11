@@ -56,6 +56,9 @@ const removeEntity = (ent) => {
   entities = entities.filter((e) => e !== ent);
 };
 
+const isWallAt = (x, y) =>
+  x === 0 || y === 0 || x === WIDTH - 1 || y === HEIGHT - 1;
+
 window.addEventListener("keydown", function (e) {
   keys[e.keyCode] = true;
 });
@@ -111,21 +114,29 @@ function startNextFloor() {
   });
 }
 
+const moveLeft = () => {
+  if (!isWallAt(knight.x - 1, knight.y)) knight.x--;
+  knight.dir = 1;
+};
+
+const moveUp = () => {
+  if (!isWallAt(knight.x, knight.y - 1)) knight.y--;
+};
+
+const moveRight = () => {
+  if (!isWallAt(knight.x + 1, knight.y)) knight.x++;
+  knight.dir = 0;
+};
+
+const moveDown = () => {
+  if (!isWallAt(knight.x, knight.y + 1)) knight.y++;
+};
+
 const keyMap = {
-  37: () => {
-    if (knight.x > 1) knight.x--;
-    knight.dir = 1;
-  },
-  38: () => {
-    if (knight.y > 1) knight.y--;
-  },
-  39: () => {
-    if (knight.x < WIDTH - 2) knight.x++;
-    knight.dir = 0;
-  },
-  40: () => {
-    if (knight.y < HEIGHT - 2) knight.y++;
-  },
+  37: moveLeft,
+  38: moveUp,
+  39: moveRight,
+  40: moveDown,
 };
 
 function handleCollision(ent) {
