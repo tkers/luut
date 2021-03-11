@@ -14,14 +14,29 @@ import {
 
 const drawTile = createTileSet(spr_tiles, CELL_SIZE);
 
-const randomWalk = (me) => {
+const getRandomMove = (me) => {
   const opts = [];
   if (me.x > 1) opts.push([me.x - 1, me.y]);
   if (me.y > 1) opts.push([me.x, me.y - 1]);
   if (me.x < WIDTH - 2) opts.push([me.x + 1, me.y]);
   if (me.y < HEIGHT - 2) opts.push([me.x, me.y + 1]);
   const nextPos = randomElem(opts);
-  return [{ type: "Move", x: nextPos[0], y: nextPos[1] }];
+  return { type: "Move", x: nextPos[0], y: nextPos[1] };
+};
+
+const randomWalk = ({ me }) => {
+  return [getRandomMove(me)];
+};
+
+const randomWalkAndSplice = ({ me, floor }) => {
+  console.log({ floor });
+  const actions = [];
+  me.grow++;
+  if (me.grow === 5) {
+    actions.push({ type: "Spawn", make: makeSlime });
+  }
+  actions.push(getRandomMove(me));
+  return actions;
 };
 
 export const makeKnight = (x, y) => {
@@ -72,7 +87,8 @@ export const makeSkeleton = (x, y) => ({
 export const makeSlime = (x, y) => ({
   name: "Slime",
   draw: createAnimation(spr_slime, CELL_SIZE),
-  turn: randomWalk,
+  turn: randomWalkAndSplice,
+  grow: 0,
   x,
   y,
 });

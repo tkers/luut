@@ -154,11 +154,14 @@ function update() {
         entities
           .filter((e) => !!e.turn)
           .forEach((ent) => {
-            const actions = ent.turn(ent);
+            const actions = ent.turn({ me: ent, player: knight, floor });
             actions.forEach((action) => {
               if (action.type === "Move") {
                 ent.x = action.x;
                 ent.y = action.y;
+              }
+              if (action.type === "Spawn") {
+                entities.push(action.make(ent.x, ent.y));
               }
             });
           });
