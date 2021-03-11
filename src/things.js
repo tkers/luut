@@ -28,6 +28,10 @@ const randomWalk = ({ me }) => {
   return [getRandomMove(me)];
 };
 
+const randomLazyWalk = ({ me }) => {
+  return Math.random() > 0.5 ? [getRandomMove(me)] : [];
+};
+
 const randomWalkAndSplice = ({ me, floor }) => {
   console.log({ floor });
   const actions = [];
@@ -71,7 +75,7 @@ export const makeCoin = (x, y) => ({
 export const makeBat = (x, y) => ({
   name: "Bat",
   draw: createAnimation(spr_bat, CELL_SIZE),
-  turn: randomWalk,
+  turn: randomLazyWalk,
   x,
   y,
 });
