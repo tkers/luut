@@ -4,7 +4,7 @@ import { handleSwipe } from "./touch";
 
 import { createTileSet, createAnimation } from "./gfx";
 import { tweenPos } from "./tween";
-import { randomPositions, randomElem } from "./rnd";
+import { shuffleArray, randomPositions, randomElem } from "./rnd";
 
 import {
   makeKnight,
@@ -90,6 +90,7 @@ function start() {
 function startNextFloor() {
   isDescending = false;
   fade = 1.5;
+  entities = [];
 
   incrementFloor();
 
@@ -97,13 +98,29 @@ function startNextFloor() {
     ([x, y]) => Math.abs(x - knight.x) > 1 || Math.abs(y - knight.y) > 1
   );
 
-  entities = [];
-  [makeStairs, makeCoin, makeCoin, makeBat, makeSkeleton, makeSlime].forEach(
-    (make) => {
-      const [x, y] = rndPos.pop();
-      entities.push(make(x, y));
-    }
-  );
+  const [stairsX, stairsY] = rndPos.pop();
+  entities.push(makeStairs(stairsX, stairsY));
+
+  const toSpawn = [];
+  for (let i = 0; i < floor; i++) {
+    toSpawn.push(makeCoin);
+  }
+  for (let i = 0; i < floor - 1; i++) {
+    toSpawn.push(makeBat);
+  }
+  for (let i = 0; i < floor - 2; i++) {
+    toSpawn.push(makeSkeleton);
+  }
+  for (let i = 0; i < floor - 3; i++) {
+    toSpawn.push(makeSlime);
+  }
+
+  shuffleArray(toSpawn);
+
+  toSpawn.slice(0, rndPos.length / 3).forEach((make) => {
+    const [x, y] = rndPos.pop();
+    entities.push(make(x, y));
+  });
 }
 
 const keyMap = {
