@@ -21,7 +21,17 @@ const getRandomMove = (me) => {
   if (me.x < WIDTH - 2) opts.push([me.x + 1, me.y]);
   if (me.y < HEIGHT - 2) opts.push([me.x, me.y + 1]);
   const nextPos = randomElem(opts);
-  return { type: "Move", x: nextPos[0], y: nextPos[1] };
+  return nextPos && { type: "Move", x: nextPos[0], y: nextPos[1] };
+};
+
+const getTargetMove = (me, tgt) => {
+  const opts = [];
+  if (me.x > 1 && me.x > tgt.x) opts.push([me.x - 1, me.y]);
+  if (me.y > 1 && me.y > tgt.y) opts.push([me.x, me.y - 1]);
+  if (me.x < WIDTH - 2 && me.x < tgt.x) opts.push([me.x + 1, me.y]);
+  if (me.y < HEIGHT - 2 && me.y < tgt.y) opts.push([me.x, me.y + 1]);
+  const nextPos = randomElem(opts);
+  return nextPos && { type: "Move", x: nextPos[0], y: nextPos[1] };
 };
 
 const randomWalk = ({ me }) => {
@@ -30,6 +40,12 @@ const randomWalk = ({ me }) => {
 
 const randomLazyWalk = ({ me }) => {
   return Math.random() > 0.5 ? [getRandomMove(me)] : [];
+};
+
+const aggressiveWalk = ({ me, player }) => {
+  return Math.random() > 0.7
+    ? [getTargetMove(me, player)]
+    : [getRandomMove(me)];
 };
 
 const randomWalkAndSplice = ({ me, floor }) => {
@@ -83,7 +99,7 @@ export const makeBat = (x, y) => ({
 export const makeSkeleton = (x, y) => ({
   name: "Skeleton",
   draw: createAnimation(spr_skeleton, CELL_SIZE),
-  turn: randomWalk,
+  turn: aggressiveWalk,
   x,
   y,
 });
