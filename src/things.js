@@ -1,8 +1,9 @@
 import { WIDTH, HEIGHT, CELL_SIZE } from "./config";
 import { randomElem } from "./rnd";
 
-import { createAnimation } from "./gfx";
+import { createTileSet, createAnimation } from "./gfx";
 import {
+  spr_tiles,
   spr_knight,
   spr_knight_flip,
   spr_coin,
@@ -10,6 +11,8 @@ import {
   spr_skeleton,
   spr_slime,
 } from "./sprites";
+
+const drawTile = createTileSet(spr_tiles, CELL_SIZE);
 
 const randomWalk = (x, y) => {
   const opts = [];
@@ -34,6 +37,13 @@ export const makeKnight = (x, y) => {
   knight.draw = (...args) => draw[knight.dir](...args);
   return knight;
 };
+
+export const makeStairs = (x, y) => ({
+  name: "Stairs",
+  draw: (ctx, x, y) => drawTile(ctx, 8, 1, x, y),
+  x,
+  y,
+});
 
 export const makeCoin = (x, y) => ({
   name: "Coin",
