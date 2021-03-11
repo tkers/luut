@@ -31,17 +31,16 @@ footer {
 }
 header {
   background-color: #1e1721;
-  padding: 16px 32px 32px;
+  padding: 20px 32px 28px;
   font-size: 20px;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-  padding-top: calc(env(safe-area-inset-top) + 16px);
+  padding-top: calc(max(env(safe-area-inset-top), 8px) + 12px);
 }
 main {
-  margin-top: -16px;
+  margin-top: -8px;
+  padding-top: 32px;
   background-color: #271d2a;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
-
-  padding: 32px 0;
   border-radius: 8px;
 }
 canvas {
@@ -49,7 +48,7 @@ canvas {
   transition-duration: 0.1s;
 }
 footer {
-  margin: 20px;
+  margin: 12px;
   display: inline-block;
   padding: 6px 12px;
   border-radius: 500px;
