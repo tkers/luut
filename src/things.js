@@ -50,7 +50,6 @@ const aggressiveWalk = ({ me, player }) => {
 };
 
 const randomWalkAndSplice = ({ me, floor }) => {
-  console.log({ floor });
   const actions = [];
   me.grow++;
   if (me.grow === 5) {
