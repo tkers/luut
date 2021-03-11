@@ -23,6 +23,28 @@ let entities;
 let isDescending, fade;
 let knight;
 let floor = 0;
+let coins = 0;
+let lives = 3;
+
+const incrementFloor = () => {
+  floor++;
+  document.getElementById("floor-hud").textContent = `${floor}`;
+};
+
+const incrementCoins = () => {
+  coins++;
+  document.getElementById("coins-hud").textContent = `${coins}`;
+};
+
+const decrementLives = () => {
+  lives--;
+  document.getElementById("lives-hud").textContent = `${lives}`;
+};
+
+const getEntityAt = (x, y) => entities.find((e) => e.x === x && e.y === y);
+const removeEntity = (ent) => {
+  entities = entities.filter((e) => e !== ent);
+};
 
 window.addEventListener("keydown", function (e) {
   keys[e.keyCode] = true;
@@ -54,8 +76,7 @@ function start() {
   isDescending = false;
   fade = 1.5;
 
-  floor++;
-  document.getElementById("floor-hud").textContent = `${floor}`;
+  incrementFloor();
 
   const rndPos = randomPositions(1, 1, WIDTH - 1, HEIGHT - 1).filter(
     ([x, y]) => Math.abs(x - knight.x) > 1 || Math.abs(y - knight.y) > 1
@@ -87,14 +108,34 @@ const keyMap = {
   },
 };
 
+function handleCollision(ent) {
+  if (ent.name === "Stairs") isDescending = true;
+  if (ent.name === "Coin") {
+    incrementCoins();
+    removeEntity(ent);
+  }
+  if (ent.name === "Slime" || ent.name === "Bat" || ent.name === "Skeleton") {
+    decrementLives();
+    removeEntity(ent);
+  }
+}
+
 function update() {
-  // input
+  // input & movement
 
   if (!isDescending) {
-    Object.entries(keyMap).forEach(([n, fn]) => {
-      if (keys[n]) {
-        keys[n] = false;
-        fn();
+    Object.entries(keyMap).forEach(([keyCode, moveKnight]) => {
+      if (keys[keyCode]) {
+        keys[keyCode] = false;
+
+        // First move player
+        moveKnight();
+
+        // Check for collisions
+        const oldHit = getEntityAt(knight.x, knight.y);
+        if (oldHit) handleCollision(oldHit);
+
+        // Move the monsters next
         entities
           .filter((e) => !!e.turn)
           .forEach((ent) => {
@@ -102,6 +143,10 @@ function update() {
             ent.x = x;
             ent.y = y;
           });
+
+        // Check for new collisions
+        const newHit = getEntityAt(knight.x, knight.y);
+        if (newHit) handleCollision(newHit);
       }
     });
   }
@@ -149,10 +194,6 @@ function update() {
   // player
   const [knightDrawX, knightDrawY] = tweenPos(knight);
   knight.draw(ctx, knightDrawX, knightDrawY);
-
-  // collisions
-  const hit = entities.find((ent) => ent.x === knight.x && ent.y === knight.y);
-  if (hit && hit.name === "Stairs") isDescending = true;
 
   // descend
 
