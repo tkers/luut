@@ -154,9 +154,13 @@ function update() {
         entities
           .filter((e) => !!e.turn)
           .forEach((ent) => {
-            const [x, y] = ent.turn(ent.x, ent.y);
-            ent.x = x;
-            ent.y = y;
+            const actions = ent.turn(ent);
+            actions.forEach((action) => {
+              if (action.type === "Move") {
+                ent.x = action.x;
+                ent.y = action.y;
+              }
+            });
           });
 
         // Check for new collisions

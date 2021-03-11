@@ -14,13 +14,14 @@ import {
 
 const drawTile = createTileSet(spr_tiles, CELL_SIZE);
 
-const randomWalk = (x, y) => {
+const randomWalk = (me) => {
   const opts = [];
-  if (x > 1) opts.push([x - 1, y]);
-  if (y > 1) opts.push([x, y - 1]);
-  if (x < WIDTH - 2) opts.push([x + 1, y]);
-  if (y < HEIGHT - 2) opts.push([x, y + 1]);
-  return randomElem(opts);
+  if (me.x > 1) opts.push([me.x - 1, me.y]);
+  if (me.y > 1) opts.push([me.x, me.y - 1]);
+  if (me.x < WIDTH - 2) opts.push([me.x + 1, me.y]);
+  if (me.y < HEIGHT - 2) opts.push([me.x, me.y + 1]);
+  const nextPos = randomElem(opts);
+  return [{ type: "Move", x: nextPos[0], y: nextPos[1] }];
 };
 
 export const makeKnight = (x, y) => {
