@@ -20,25 +20,32 @@ import { spr_tiles } from "./sprites";
 let ctx, drawTile;
 let keys = {};
 let entities;
-let isDescending, fade;
+let isDescending, isDead, fade;
 let knight;
-let floor = 0;
-let coins = 0;
-let lives = 3;
+let floor, coins, lives;
+
+const redrawStats = () => {
+  document.getElementById("floor-hud").textContent = `${floor}`;
+  document.getElementById("coins-hud").textContent = `${coins}`;
+  document.getElementById("lives-hud").textContent = `${lives}`;
+};
 
 const incrementFloor = () => {
   floor++;
-  document.getElementById("floor-hud").textContent = `${floor}`;
+  redrawStats();
 };
 
 const incrementCoins = () => {
   coins++;
-  document.getElementById("coins-hud").textContent = `${coins}`;
+  redrawStats();
 };
 
 const decrementLives = () => {
   lives--;
-  document.getElementById("lives-hud").textContent = `${lives}`;
+  redrawStats();
+  if (lives <= 0) {
+    isDead = true;
+  }
 };
 
 const getEntityAt = (x, y) => entities.find((e) => e.x === x && e.y === y);
@@ -66,13 +73,21 @@ window.addEventListener("load", function () {
 
 function init() {
   ctx = setupCanvas("root", WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE, SCALE);
-
   drawTile = createTileSet(spr_tiles, CELL_SIZE);
-
-  knight = makeKnight(2, 2);
 }
 
 function start() {
+  knight = makeKnight(2, 2);
+  isDead = false;
+
+  floor = 0;
+  coins = 0;
+  lives = 3;
+
+  startNextFloor();
+}
+
+function startNextFloor() {
   isDescending = false;
   fade = 1.5;
 
@@ -123,7 +138,7 @@ function handleCollision(ent) {
 function update() {
   // input & movement
 
-  if (!isDescending) {
+  if (!isDead && !isDescending) {
     Object.entries(keyMap).forEach(([keyCode, moveKnight]) => {
       if (keys[keyCode]) {
         keys[keyCode] = false;
@@ -147,6 +162,16 @@ function update() {
         // Check for new collisions
         const newHit = getEntityAt(knight.x, knight.y);
         if (newHit) handleCollision(newHit);
+      }
+    });
+  }
+
+  // restart
+  if (isDead && fade > 0.9) {
+    Object.entries(keyMap).forEach(([keyCode]) => {
+      if (keys[keyCode]) {
+        keys[keyCode] = false;
+        start();
       }
     });
   }
@@ -195,19 +220,27 @@ function update() {
   const [knightDrawX, knightDrawY] = tweenPos(knight);
   knight.draw(ctx, knightDrawX, knightDrawY);
 
-  // descend
+  // descend & gameover
 
   if (isDescending) {
     if (fade < 1) fade += Math.min(1 - fade, 1 / 12);
-    else start();
+    else startNextFloor();
+  } else if (isDead) {
+    if (fade < 2) fade += Math.min(2 - fade, 2 / 60);
   } else {
     if (fade > 0) fade -= Math.min(fade, 1 / 12);
   }
 
-  // descend fade-out
+  // fade-out
   if (fade > 0) {
     ctx.fillStyle = `rgba(39, 29, 42, ${fade})`;
     ctx.fillRect(0, 0, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
+
+    if (isDead) {
+      ctx.globalAlpha = fade > 1 ? fade - 1 : 0;
+      drawTile(ctx, 17, 1, WIDTH / 2 - 0.5, HEIGHT / 2 - 0.5);
+      ctx.globalAlpha = 1;
+    }
   }
 
   // loop!
