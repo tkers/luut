@@ -62,13 +62,75 @@ const removeEntity = (ent) => {
   entities = entities.filter((e) => e !== ent);
 };
 
+const floorPlan = [
+  [1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1],
+];
+
 const isWallAt = (x, y) =>
-  x === 0 || y === 0 || x === WIDTH - 1 || y === HEIGHT - 1;
+  x >= 0 && y >= 0 && x < WIDTH && y < HEIGHT && floorPlan[y][x] === 1;
+
+const isFloorAt = (x, y) =>
+  x >= 0 && y >= 0 && x < WIDTH && y < HEIGHT && floorPlan[y][x] === 0;
 
 const isFreeAt = (x, y) => {
   if (isWallAt(x, y)) return false;
   const ent = getEntityAt(x, y);
   return !ent || ent.name !== "Stairs";
+};
+
+const WN = 1;
+const FN = 2;
+const WE = 4;
+const FE = 8;
+const WS = 16;
+const FS = 32;
+const WW = 64;
+const FW = 128;
+const getWallTile = (x, y) => {
+  const n = isWallAt(x, y - 1) ? WN : 0;
+  const nf = isFloorAt(x, y - 1) ? FN : 0;
+  const e = isWallAt(x + 1, y) ? WE : 0;
+  const ef = isFloorAt(x + 1, y) ? FE : 0;
+  const s = isWallAt(x, y + 1) ? WS : 0;
+  const sf = isFloorAt(x, y + 1) ? FS : 0;
+  const w = isWallAt(x - 1, y) ? WW : 0;
+  const wf = isFloorAt(x - 1, y) ? FW : 0;
+  const shape = n + nf + e + ef + s + sf + w + wf;
+  switch (shape) {
+    case WE + WS:
+      return [0, 0];
+    case WE + FS + WW:
+      return [1, 0];
+    case WW + WS:
+      return [2, 0];
+    case WN + FE + WS:
+      return [0, 1];
+    case WN + WS + FW:
+      return [2, 1];
+    case WN + WE:
+      return [0, 2];
+    case FN + WE + WW:
+      return [1, 2];
+    case WN + WW:
+      return [2, 2];
+    default:
+      return [10, 0];
+  }
+};
+
+const getTile = (x, y) => {
+  if (isFloorAt(x, y)) return [1, 1];
+  else if (isWallAt(x, y)) return getWallTile(x, y);
+  return null;
 };
 
 window.addEventListener("keydown", function (e) {
@@ -112,9 +174,11 @@ function startNextFloor() {
 
   incrementFloor();
 
-  const rndPos = randomPositions(1, 1, WIDTH - 1, HEIGHT - 1).filter(
-    ([x, y]) => Math.abs(x - knight.x) > 1 || Math.abs(y - knight.y) > 1
-  );
+  const rndPos = randomPositions(0, 0, WIDTH, HEIGHT)
+    .filter(([x, y]) => isFloorAt(x, y))
+    .filter(
+      ([x, y]) => Math.abs(x - knight.x) > 1 || Math.abs(y - knight.y) > 1
+    );
 
   const [stairsX, stairsY] = rndPos.pop();
   addEntity(makeStairs(stairsX, stairsY));
@@ -227,35 +291,36 @@ function update() {
 
   ctx.clearRect(0, 0, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
 
-  for (let y = 1; y < HEIGHT - 1; y++) {
-    for (let x = 1; x < WIDTH - 1; x++) {
-      drawTile(ctx, 1, 1, x, y);
+  for (let y = 0; y < HEIGHT; y++) {
+    for (let x = 0; x < WIDTH; x++) {
+      const t = getTile(x, y);
+      if (t) drawTile(ctx, t[0], t[1], x, y);
     }
   }
 
-  // top wall
-  drawTile(ctx, 0, 0, 0, 0);
-  for (let x = 1; x < WIDTH - 1; x++) {
-    drawTile(ctx, 1, 0, x, 0);
-  }
-  drawTile(ctx, 2, 0, WIDTH - 1, 0);
-
-  // bottom wall
-  drawTile(ctx, 0, 2, 0, HEIGHT - 1);
-  for (let x = 1; x < WIDTH - 1; x++) {
-    drawTile(ctx, 1, 2, x, HEIGHT - 1);
-  }
-  drawTile(ctx, 2, 2, WIDTH - 1, HEIGHT - 1);
-
-  // left wall
-  for (let y = 0; y < HEIGHT - 1; y++) {
-    drawTile(ctx, 0, 1, 0, y);
-  }
-
-  // right wall
-  for (let y = 0; y < HEIGHT - 1; y++) {
-    drawTile(ctx, 2, 1, WIDTH - 1, y);
-  }
+  // // top wall
+  // drawTile(ctx, 0, 0, 0, 0);
+  // for (let x = 1; x < WIDTH - 1; x++) {
+  //   drawTile(ctx, 1, 0, x, 0);
+  // }
+  // drawTile(ctx, 2, 0, WIDTH - 1, 0);
+  //
+  // // bottom wall
+  // drawTile(ctx, 0, 2, 0, HEIGHT - 1);
+  // for (let x = 1; x < WIDTH - 1; x++) {
+  //   drawTile(ctx, 1, 2, x, HEIGHT - 1);
+  // }
+  // drawTile(ctx, 2, 2, WIDTH - 1, HEIGHT - 1);
+  //
+  // // left wall
+  // for (let y = 0; y < HEIGHT - 1; y++) {
+  //   drawTile(ctx, 0, 1, 0, y);
+  // }
+  //
+  // // right wall
+  // for (let y = 0; y < HEIGHT - 1; y++) {
+  //   drawTile(ctx, 2, 1, WIDTH - 1, y);
+  // }
 
   // monsters and items
   entities.forEach((ent) => {
