@@ -6,6 +6,7 @@ import { createTileSet, createAnimation } from "./gfx";
 import { tweenPos } from "./tween";
 import { randomPositions, randomElem } from "./rnd";
 
+import { randomMap } from "./maps";
 import { makeKnight, makeStairs } from "./things";
 import { decideSpawns } from "./floors";
 
@@ -17,6 +18,7 @@ let entities;
 let isDescending, isDead, fade;
 let knight;
 let floor, coins, lives;
+let floorPlan;
 
 const hideExtraHud = () => {
   const elem = document.getElementById("extra-hud");
@@ -62,19 +64,6 @@ const removeEntity = (ent) => {
   entities = entities.filter((e) => e !== ent);
 };
 
-const floorPlan = [
-  [1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1],
-];
-
 const isWallAt = (x, y) =>
   x >= 0 && y >= 0 && x < WIDTH && y < HEIGHT && floorPlan[y][x] === 1;
 
@@ -113,17 +102,28 @@ const getWallTile = (x, y) => {
     case WW + WS:
       return [2, 0];
     case WN + FE + WS:
+    case WN + FE + WS + WW:
       return [0, 1];
     case WN + WS + FW:
+    case WN + WE + WS + FW:
       return [2, 1];
     case WN + WE:
       return [0, 2];
     case FN + WE + WW:
+    case FN + WE + WS + WW:
       return [1, 2];
     case WN + WW:
       return [2, 2];
+    case FN + WE + WS + FW:
+      return [3, 0];
+    case FN + WW + WS + FE:
+      return [4, 0];
+    case WN + WE + FS + FW:
+      return [3, 1];
+    case WN + FE + FS + WW:
+      return [4, 1];
     default:
-      return [10, 0];
+      return [1, 0];
   }
 };
 
@@ -173,6 +173,8 @@ function startNextFloor() {
   entities = [];
 
   incrementFloor();
+
+  floorPlan = randomMap(floor, knight.x, knight.y);
 
   const rndPos = randomPositions(0, 0, WIDTH, HEIGHT)
     .filter(([x, y]) => isFloorAt(x, y))
