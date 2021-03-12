@@ -18,6 +18,12 @@ let isDescending, isDead, fade;
 let knight;
 let floor, coins, lives;
 
+const hideExtraHud = () => {
+  const elem = document.getElementById("extra-hud");
+  elem.style.opacity = "0";
+  elem.style.pointerEvents = "none";
+};
+
 const redrawStats = () => {
   document.getElementById("floor-hud").textContent = `${floor}`;
   document.getElementById("coins-hud").textContent = `${coins}`;
@@ -146,7 +152,10 @@ const keyMap = {
 };
 
 function handleCollision(ent) {
-  if (ent.name === "Stairs") isDescending = true;
+  if (ent.name === "Stairs") {
+    isDescending = true;
+    hideExtraHud();
+  }
   if (ent.name === "Coin") {
     incrementCoins();
     removeEntity(ent);

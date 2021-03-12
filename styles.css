@@ -57,6 +57,9 @@ footer {
   color: #888;
   font-size: 12px;
   cursor: default;
+
+  opacity: 1;
+  transition: opacity 0.2s;
 }
 footer b {
   color: #000;
