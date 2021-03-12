@@ -62,12 +62,11 @@ const randomMonster = (floor) => {
 
 export const decideSpawns = (floor, total) => {
   const toSpawn = [];
-
   for (let i = 0; i < floor / 5; i++) {
     toSpawn.push(makeCoin);
   }
 
-  for (let i = 0; i < (floor - 1) / 2; i++) {
+  for (let i = 0; i < floor - 1; i++) {
     toSpawn.push(randomMonster(floor));
   }
 
@@ -77,5 +76,6 @@ export const decideSpawns = (floor, total) => {
     toSpawn.unshift(makePotion);
   }
 
-  return toSpawn.slice(0, total / 4);
+  const amount = Math.min(floor < 4 ? floor : 3 + floor / 4, total / 4.5);
+  return toSpawn.slice(0, amount);
 };

@@ -51,7 +51,7 @@ const aggressiveWalk = ({ me, player, isFreeAt }) => [
 const randomWalkAndSplice = ({ me, isFreeAt }) => {
   const actions = [];
   me.grow++;
-  if (me.grow === 5) {
+  if (me.grow === 8) {
     actions.push({ type: "Spawn", make: makeSlime });
   }
   actions.push(getRandomMove(me, isFreeAt));

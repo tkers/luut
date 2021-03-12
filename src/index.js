@@ -94,7 +94,7 @@ function start() {
 
   floor = 0;
   coins = 0;
-  lives = 3;
+  lives = 5;
 
   startNextFloor();
 }
