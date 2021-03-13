@@ -20,3 +20,24 @@ export const createAnimation = (spr, w, h = w) => {
   return (ctx, dx, dy) =>
     ctx.drawImage(spr, frame * w, 0, w, h, dx * w, dy * h, w, h);
 };
+
+export const createToggleAnimation = (spr, w, h = w) => {
+  const n = spr.width / w;
+  let frame = 0;
+  let isActive = false;
+  if (n > 0) {
+    const step = () => {
+      if (isActive || frame > 0) {
+        isActive = false;
+        frame = (frame + 1) % n;
+      }
+    };
+    setInterval(step, 125);
+  }
+  const draw = (ctx, dx, dy) =>
+    ctx.drawImage(spr, frame * w, 0, w, h, dx * w, dy * h, w, h);
+  const activate = () => {
+    isActive = true;
+  };
+  return { draw, activate };
+};

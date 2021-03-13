@@ -8,3 +8,4 @@ export const spr_knight_flip = loadImg("img/knight_flip.png");
 export const spr_slime = loadImg("img/slime.png");
 export const spr_coin = loadImg("img/coin.png");
 export const spr_potion = loadImg("img/potion.png");
+export const spr_trap = loadImg("img/trap.png");

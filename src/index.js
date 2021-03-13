@@ -223,7 +223,7 @@ const keyMap = {
   76: moveRight,
 };
 
-function handleCollision(ent) {
+function handleCollision(ent, beforeMove) {
   if (ent.name === "Stairs") {
     isDescending = true;
     hideExtraHud();
@@ -235,6 +235,9 @@ function handleCollision(ent) {
   if (ent.name === "Potion") {
     incrementLives();
     removeEntity(ent);
+  }
+  if (ent.name === "Trap" && ent.isActive && !beforeMove) {
+    decrementLives();
   }
   if (ent.name === "Slime" || ent.name === "Bat" || ent.name === "Skeleton") {
     decrementLives();
@@ -255,7 +258,7 @@ function update() {
 
         // Check for collisions
         const oldHit = getEntityAt(knight.x, knight.y);
-        if (oldHit) handleCollision(oldHit);
+        if (oldHit) handleCollision(oldHit, true);
 
         // Move the monsters next
         entities
@@ -280,7 +283,7 @@ function update() {
 
         // Check for new collisions
         const newHit = getEntityAt(knight.x, knight.y);
-        if (newHit) handleCollision(newHit);
+        if (newHit) handleCollision(newHit, false);
       }
     });
   }

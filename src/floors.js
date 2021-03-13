@@ -5,6 +5,7 @@ import {
   makeBat,
   makeSkeleton,
   makeSlime,
+  makeTrap,
 } from "./things";
 
 const randomMonster = (floor) => {
@@ -20,7 +21,7 @@ const randomMonster = (floor) => {
     case 7:
     case 8:
     case 9: // 50:50:0
-      return randomElem([makeBat, makeSkeleton]);
+      return randomElem([makeBat, makeSkeleton, makeSkeleton, makeTrap]);
     case 10:
     case 11:
     case 12:
@@ -37,6 +38,8 @@ const randomMonster = (floor) => {
         makeSkeleton,
         makeSkeleton,
         makeSlime,
+        makeTrap,
+        makeTrap,
       ]);
     case 15:
     case 16:
@@ -54,6 +57,8 @@ const randomMonster = (floor) => {
         makeSlime,
         makeSlime,
         makeSlime,
+        makeTrap,
+        makeTrap,
       ]);
     default:
       // 20 : 40 : 40
@@ -63,6 +68,7 @@ const randomMonster = (floor) => {
         makeSkeleton,
         makeSlime,
         makeSlime,
+        makeTrap,
       ]);
   }
 };

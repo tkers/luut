@@ -1,7 +1,7 @@
 import { WIDTH, HEIGHT, CELL_SIZE } from "./config";
 import { randomElem } from "./rnd";
 
-import { createTileSet, createAnimation } from "./gfx";
+import { createTileSet, createAnimation, createToggleAnimation } from "./gfx";
 import {
   spr_tiles,
   spr_knight,
@@ -11,6 +11,7 @@ import {
   spr_bat,
   spr_skeleton,
   spr_slime,
+  spr_trap,
 } from "./sprites";
 
 const drawTile = createTileSet(spr_tiles, CELL_SIZE);
@@ -88,6 +89,25 @@ export const makeCoin = (x, y) => ({
   x,
   y,
 });
+
+export const makeTrap = (x, y) => {
+  const ani = createToggleAnimation(spr_trap, CELL_SIZE);
+  return {
+    name: "Trap",
+    draw: ani.draw,
+    isActive: false,
+    fase: Math.floor(Math.random() * 3),
+    turn: ({ me }) => {
+      me.fase = (me.fase + 1) % 3;
+      me.isActive = me.fase === 0;
+      if (me.isActive) ani.activate();
+      return [];
+    },
+    sort: 8,
+    x,
+    y,
+  };
+};
 
 export const makePotion = (x, y) => ({
   name: "Potion",
