@@ -11,22 +11,28 @@ import {
 const randomMonster = (floor) => {
   switch (floor) {
     case 1:
-    case 2: // 100:0:0
+    case 2: // 100 : 0 : 0 : 0
       return makeBat;
     case 3:
     case 4:
-    case 5: // 66:33:0
+    case 5: // 66 : 33 : 0 : 0
       return randomElem([makeBat, makeBat, makeSkeleton]);
     case 6:
     case 7:
     case 8:
-    case 9: // 50:50:0
-      return randomElem([makeBat, makeSkeleton, makeSkeleton, makeTrap]);
+    case 9: // 40 : 40 : 0 : 20
+      return randomElem([
+        makeBat,
+        makeBat,
+        makeSkeleton,
+        makeSkeleton,
+        makeTrap,
+      ]);
     case 10:
     case 11:
     case 12:
     case 13:
-    case 14: // 40:50:10
+    case 14: // 33 : 40 : 8 : 16
       return randomElem([
         makeBat,
         makeBat,
@@ -45,7 +51,7 @@ const randomMonster = (floor) => {
     case 16:
     case 17:
     case 18:
-    case 19: // 30:40:30
+    case 19: // 25 : 40 : 16 : 16
       return randomElem([
         makeBat,
         makeBat,
@@ -54,18 +60,22 @@ const randomMonster = (floor) => {
         makeSkeleton,
         makeSkeleton,
         makeSkeleton,
-        makeSlime,
+        makeSkeleton,
         makeSlime,
         makeSlime,
         makeTrap,
         makeTrap,
       ]);
     default:
-      // 20 : 40 : 40
+      // 20 : 40 : 30 : 10
       return randomElem([
+        makeBat,
         makeBat,
         makeSkeleton,
         makeSkeleton,
+        makeSkeleton,
+        makeSkeleton,
+        makeSlime,
         makeSlime,
         makeSlime,
         makeTrap,
