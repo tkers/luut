@@ -18,7 +18,7 @@ let entities;
 let isDescending, isDead, fade;
 let knight;
 let floor, coins, lives;
-let floorPlan;
+let floorPlan, tilePlan;
 let hitFade = 0;
 let hitX, hitY;
 
@@ -180,6 +180,14 @@ function startNextFloor() {
   incrementFloor();
 
   floorPlan = randomMap(floor, knight.x, knight.y);
+  tilePlan = [];
+  for (let y = 0; y < HEIGHT; y++) {
+    tilePlan[y] = [];
+    for (let x = 0; x < WIDTH; x++) {
+      const t = getTile(x, y);
+      tilePlan[y].push(t);
+    }
+  }
 
   const rndPos = randomPositions(0, 0, WIDTH, HEIGHT)
     .filter(([x, y]) => isFloorAt(x, y))
@@ -320,40 +328,16 @@ function update() {
     });
   }
 
-  // draw
+  // draw dungeon
 
   ctx.clearRect(0, 0, WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
 
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
-      const t = getTile(x, y);
+      const t = tilePlan[y][x];
       if (t) drawTile(ctx, t[0], t[1], x, y);
     }
   }
-
-  // // top wall
-  // drawTile(ctx, 0, 0, 0, 0);
-  // for (let x = 1; x < WIDTH - 1; x++) {
-  //   drawTile(ctx, 1, 0, x, 0);
-  // }
-  // drawTile(ctx, 2, 0, WIDTH - 1, 0);
-  //
-  // // bottom wall
-  // drawTile(ctx, 0, 2, 0, HEIGHT - 1);
-  // for (let x = 1; x < WIDTH - 1; x++) {
-  //   drawTile(ctx, 1, 2, x, HEIGHT - 1);
-  // }
-  // drawTile(ctx, 2, 2, WIDTH - 1, HEIGHT - 1);
-  //
-  // // left wall
-  // for (let y = 0; y < HEIGHT - 1; y++) {
-  //   drawTile(ctx, 0, 1, 0, y);
-  // }
-  //
-  // // right wall
-  // for (let y = 0; y < HEIGHT - 1; y++) {
-  //   drawTile(ctx, 2, 1, WIDTH - 1, y);
-  // }
 
   // monsters and items
   const toRemove = [];
@@ -375,16 +359,10 @@ function update() {
   knight.draw(ctx, knightDrawX, knightDrawY);
   if (hitFade > 0) {
     hitFade -= Math.min(hitFade, 1 / 36);
-    // ctx.fillStyle = `rgba(200, 25, 40, ${hitFade / 2})`;
+
     ctx.fillStyle = `rgba(250, 0, 0, ${hitFade / 2})`;
     ctx.globalCompositeOperation = "overlay";
 
-    // ctx.fillRect(
-    //   knight.x * CELL_SIZE + 1,
-    //   knight.y * CELL_SIZE + 1,
-    //   CELL_SIZE - 1,
-    //   CELL_SIZE - 1
-    // );
     ctx.beginPath();
     ctx.arc(
       (hitX + 0.5) * CELL_SIZE,
@@ -394,6 +372,7 @@ function update() {
       2 * Math.PI
     );
     ctx.fill();
+
     ctx.globalCompositeOperation = "source-over";
   }
 
