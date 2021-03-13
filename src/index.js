@@ -211,10 +211,16 @@ const moveDown = () => {
 };
 
 const keyMap = {
+  // arrows
   37: moveLeft,
   38: moveUp,
   39: moveRight,
   40: moveDown,
+  // vi
+  72: moveLeft,
+  74: moveDown,
+  75: moveUp,
+  76: moveRight,
 };
 
 function handleCollision(ent) {
