@@ -12,6 +12,7 @@ import {
   spr_skeleton,
   spr_slime,
   spr_trap,
+  spr_torch,
 } from "./sprites";
 
 const drawTile = createTileSet(spr_tiles, CELL_SIZE);
@@ -86,6 +87,14 @@ export const makeCoin = (x, y) => ({
   name: "Coin",
   draw: createAnimation(spr_coin, CELL_SIZE),
   sort: 5,
+  x,
+  y,
+});
+
+export const makeTorch = (x, y) => ({
+  name: "Torch",
+  draw: createAnimation(spr_torch, CELL_SIZE),
+  sort: 2,
   x,
   y,
 });

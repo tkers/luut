@@ -4,10 +4,10 @@ import { handleSwipe } from "./touch";
 
 import { createTileSet, createAnimation } from "./gfx";
 import { tweenPos } from "./tween";
-import { randomPositions, randomElem } from "./rnd";
+import { randomPositions, randomElem, shuffleArray } from "./rnd";
 
 import { randomMap } from "./maps";
-import { makeKnight, makeStairs } from "./things";
+import { makeKnight, makeStairs, makeTorch } from "./things";
 import { decideSpawns } from "./floors";
 
 import { spr_tiles } from "./sprites";
@@ -132,6 +132,14 @@ const getWallTile = (x, y) => {
   }
 };
 
+const canHoldTorch = (tile) => {
+  if (!tile) return false;
+  const [tx, ty] = tile;
+  return (
+    (tx === 1 && ty === 0) || (tx === 3 && ty === 1) || (tx === 4 && ty === 1)
+  );
+};
+
 const getTile = (x, y) => {
   if (isFloorAt(x, y)) return [1, 1];
   else if (isWallAt(x, y)) return getWallTile(x, y);
@@ -181,13 +189,20 @@ function startNextFloor() {
 
   floorPlan = randomMap(floor, knight.x, knight.y);
   tilePlan = [];
+  const torchPositions = [];
   for (let y = 0; y < HEIGHT; y++) {
     tilePlan[y] = [];
     for (let x = 0; x < WIDTH; x++) {
       const t = getTile(x, y);
       tilePlan[y].push(t);
+      if (canHoldTorch(t)) torchPositions.push([x, y]);
     }
   }
+
+  shuffleArray(torchPositions);
+  torchPositions
+    .slice(0, (Math.random() * torchPositions.length) / 2.2)
+    .forEach(([x, y]) => addEntity(makeTorch(x, y)));
 
   const rndPos = randomPositions(0, 0, WIDTH, HEIGHT)
     .filter(([x, y]) => isFloorAt(x, y))
