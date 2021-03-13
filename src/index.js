@@ -262,13 +262,14 @@ function update() {
 
         // Move the monsters next
         entities
-          .filter((e) => !!e.turn)
+          .filter((e) => !!e.turn && !e.isDead)
           .forEach((ent) => {
             const actions = ent.turn({
               me: ent,
               player: knight,
               floor,
               isFreeAt,
+              getEntityAt,
             });
             actions.forEach((action) => {
               if (action.type === "Move") {
@@ -279,6 +280,22 @@ function update() {
                 addEntity(action.make(ent.x, ent.y));
               }
             });
+            if (
+              ent.name === "Bat" ||
+              ent.name === "Skeleton" ||
+              ent.name === "Slime"
+            ) {
+              const dest = getEntityAt(ent.x, ent.y);
+              if (
+                dest &&
+                dest.name === "Trap" &&
+                dest.isActive &&
+                !ent.isDead
+              ) {
+                ent.isDead = true;
+                ent.fade = 1;
+              }
+            }
           });
 
         // Check for new collisions
@@ -334,10 +351,19 @@ function update() {
   // }
 
   // monsters and items
+  const toRemove = [];
   entities.forEach((ent) => {
     const [x, y] = tweenPos(ent);
+    if (ent.isDead) {
+      if (ent.fade > 0) ent.fade -= Math.min(ent.fade, 1 / 60);
+      else toRemove.push(ent);
+      ctx.globalAlpha = ent.fade;
+    }
     ent.draw(ctx, x, y);
+    ctx.globalAlpha = 1;
   });
+
+  toRemove.forEach(removeEntity);
 
   // player
   const [knightDrawX, knightDrawY] = tweenPos(knight);
