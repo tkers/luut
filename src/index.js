@@ -19,6 +19,8 @@ let isDescending, isDead, fade;
 let knight;
 let floor, coins, lives;
 let floorPlan;
+let hitFade = 0;
+let hitX, hitY;
 
 const hideExtraHud = () => {
   const elem = document.getElementById("extra-hud");
@@ -50,6 +52,9 @@ const incrementLives = () => {
 const decrementLives = () => {
   lives--;
   redrawStats();
+  hitFade = 1;
+  hitX = knight.x;
+  hitY = knight.y;
   if (lives <= 0) {
     isDead = true;
   }
@@ -368,6 +373,29 @@ function update() {
   // player
   const [knightDrawX, knightDrawY] = tweenPos(knight);
   knight.draw(ctx, knightDrawX, knightDrawY);
+  if (hitFade > 0) {
+    hitFade -= Math.min(hitFade, 1 / 36);
+    // ctx.fillStyle = `rgba(200, 25, 40, ${hitFade / 2})`;
+    ctx.fillStyle = `rgba(250, 0, 0, ${hitFade / 2})`;
+    ctx.globalCompositeOperation = "overlay";
+
+    // ctx.fillRect(
+    //   knight.x * CELL_SIZE + 1,
+    //   knight.y * CELL_SIZE + 1,
+    //   CELL_SIZE - 1,
+    //   CELL_SIZE - 1
+    // );
+    ctx.beginPath();
+    ctx.arc(
+      (hitX + 0.5) * CELL_SIZE,
+      (hitY + 0.5) * CELL_SIZE,
+      CELL_SIZE * 0.6,
+      0,
+      2 * Math.PI
+    );
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+  }
 
   // descend & gameover
 
