@@ -1,9 +1,9 @@
 {
-  "name": "7drl",
-  "version": "0.0.1",
-  "description": "roguelike game",
+  "name": "Luut",
+  "version": "1.0.0",
+  "description": "A tiny roguelite game for 7DRL",
   "main": "index.js",
-  "repository": "git@github.com:tkers/7drl.git",
+  "repository": "git@github.com:tkers/luut.git",
   "author": "Tijn Kersjes <tijn@divbyzero.nl>",
   "license": "MIT",
   "scripts": {
