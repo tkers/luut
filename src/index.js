@@ -286,7 +286,7 @@ function update() {
   }
 
   // restart
-  if (isDead && fade > 0.9) {
+  if (isDead && fade > 1.5) {
     Object.entries(keyMap).forEach(([keyCode]) => {
       if (keys[keyCode]) {
         keys[keyCode] = false;
